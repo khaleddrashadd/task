@@ -1,0 +1,33 @@
+<template>
+  <div class="flex items-center">
+    <Checkbox
+      :="$attrs"
+      :binary="isBinary"
+      :pt="{
+        root: {
+          class: 'flex items-center justify-center'
+        },
+        input: {
+          class:
+            'rounded-main p-2 w-[22px] h-[22px] outline-0 border-0 accent-main appearance-none checked:appearance-auto bg-[#F1F1F1]'
+        },
+        box: { class: 'hidden' }
+      }"
+      v-model="isSelected"
+      :inputId="id"
+    />
+    <label :for="id" class="mx-2 text-sm">{{ label }}</label>
+  </div>
+</template>
+
+<script setup>
+import Checkbox from 'primevue/checkbox';
+defineOptions({
+  inheritAttrs: false
+});
+defineProps(['label', 'id', 'isBinary']);
+
+const isSelected = defineModel();
+</script>
+
+<style lang="scss" scoped></style>
