@@ -101,7 +101,7 @@
 <script setup>
 import { ref, watchEffect, computed } from 'vue';
 import VueTimepicker from 'vue3-timepicker';
-import CarsSelect from '@/components/bookRide/CarsSelect.vue';
+import CarsSelect from '@/components/bookRide/carSelection/CarsSelect.vue';
 import map from '@/assets/img/map.png';
 import BaseCard from '@/components/common/BaseCard.vue';
 import BaseTitle from '@/components/common/BaseTitle.vue';

@@ -5,9 +5,14 @@
         <div class="lg:hidden">
           <SplitButton
             :pt="{
+              menuButton: {
+                root: {
+                  class: 'flex items-center'
+                }
+              },
               button: {
                 root: {
-                  style: 'display:none'
+                  class: 'hidden'
                 }
               },
               menu: {

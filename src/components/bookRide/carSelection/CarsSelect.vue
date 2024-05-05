@@ -53,7 +53,7 @@
 <script setup>
 import { ref } from 'vue';
 import car from '@/assets/img/car.png';
-import CarsSelectItem from '@/components/bookRide/CarsSelectItem.vue';
+import CarsSelectItem from '@/components/bookRide/carSelection/CarsSelectItem.vue';
 import BaseScrollButton from '@/components/common/BaseScrollButton.vue';
 import BaseTitle from '@/components/common/BaseTitle.vue';
 import arrowLeft from '@/assets/icons/arrowLeft.svg';
