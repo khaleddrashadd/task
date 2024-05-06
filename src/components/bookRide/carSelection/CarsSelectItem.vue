@@ -1,6 +1,6 @@
 <template>
   <li
-    class="w-[200px] h-[235px] flex-shrink-0 rounded-main p-3"
+    class="w-[200px] h-[235px] flex-shrink-0 rounded-main p-3 cursor-pointer"
     :class="selectedCar == id ? 'border-main border-2' : 'border-[#B9B9B9] border'"
     @click="() => $emit('selectCar', id)"
   >
