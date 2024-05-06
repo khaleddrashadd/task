@@ -1,7 +1,9 @@
 <template>
   <Dropdown
+  @hide="$emit('closeDropdown')"
     :placeholder="placeholder"
     class="bg-[#f6f6f6] px-4 py-2 rounded-main flex items-center justify-between"
+    :class="invalid ? 'border-2 border-red-500' : 'border-0'"
     :options="options"
     v-model="selectedRideType"
     :id="id"
@@ -33,7 +35,8 @@
 <script setup>
 import Dropdown from 'primevue/dropdown';
 import BaseCard from './BaseCard.vue';
-defineProps(['label', 'id', 'options', 'placeholder']);
+defineProps(['label', 'id', 'options', 'placeholder','invalid']);
+defineEmits(['closeDropdown']);
 const selectedRideType = defineModel();
 </script>
 

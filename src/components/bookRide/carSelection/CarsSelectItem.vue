@@ -1,7 +1,13 @@
 <template>
   <li
     class="w-[200px] h-[235px] flex-shrink-0 rounded-main p-3 cursor-pointer"
-    :class="selectedCar == id ? 'border-main border-2' : 'border-[#B9B9B9] border'"
+    :class="
+      invalid===true
+        ? 'border-red-500 border-2'
+        : selectedCar == id
+          ? 'border-main border-2'
+          : 'border-[#B9B9B9] border'
+    "
     @click="() => $emit('selectCar', id)"
   >
     <div class="w-[176px] h-[80px]">
@@ -46,6 +52,7 @@ defineProps([
   'carPrice',
   'car',
   'id',
-  'selectedCar'
+  'selectedCar',
+  'invalid'
 ]);
 </script>

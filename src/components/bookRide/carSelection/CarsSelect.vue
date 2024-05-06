@@ -9,7 +9,10 @@
         <BaseScrollButton :icon="arrowRight" direction="right" @handleScroll="handleScroll" />
       </div>
     </div>
-    <ul class="overflow-y-hidden flex w-full gap-4 scroll-smooth snap-mandatory snap-x" ref="el">
+    <ul
+      class="overflow-y-hidden flex w-full gap-4 scroll-smooth snap-mandatory snap-x"
+      ref="el"
+    >
       <CarsSelectItem
         @selectCar="onSelectCar"
         title="Pure class"
@@ -20,7 +23,8 @@
         carPrice="850.50"
         :car="car"
         id="1"
-        :selectedCar
+        :selectedCar="selectedCar"
+        :invalid="invalid"
       />
       <CarsSelectItem
         @selectCar="onSelectCar"
@@ -32,7 +36,8 @@
         carPrice="850.50"
         :car="car"
         id="2"
-        :selectedCar
+        :selectedCar="selectedCar"
+        :invalid="invalid"
       />
       <CarsSelectItem
         @selectCar="onSelectCar"
@@ -44,7 +49,8 @@
         carPrice="850.50"
         :car="car"
         id="3"
-        :selectedCar
+        :selectedCar="selectedCar"
+        :invalid="invalid"
       />
     </ul>
   </div>
@@ -59,14 +65,7 @@ import BaseTitle from '@/components/common/BaseTitle.vue';
 import arrowLeft from '@/assets/icons/arrowLeft.svg';
 import arrowRight from '@/assets/icons/arrowRight.svg';
 
-defineProps(['element']);
-
-const selectedCar = ref(null);
-
-const onSelectCar = (id) => {
-  selectedCar.value = id;
-  console.log(id);
-};
+defineProps(['element', 'onSelectCar', 'selectedCar', 'invalid']);
 
 const el = ref(null);
 const handleScroll = (direction) => {

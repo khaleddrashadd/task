@@ -12,7 +12,7 @@
         }
       }"
       class="bg-[#f6f6f6] w-full focus-visible:outline-none h-full px-4 py-2 rounded-main placeholder:text-sm placeholder:text-main/50 pt-5"
-      :class="readonly ? 'cursor-pointer' : ''"
+      :class="invalid ? 'border-2 border-red-500' : readonly ? 'cursor-pointer' : ''"
       type="text"
       v-model="value"
       :readonly="readonly"
@@ -23,6 +23,6 @@
 
 <script setup>
 import InputText from 'primevue/inputtext';
-defineProps(['label', 'readonly', 'id', 'placeholder', 'sm']);
+defineProps(['label', 'readonly', 'id', 'placeholder', 'sm', 'invalid']);
 const value = defineModel();
 </script>

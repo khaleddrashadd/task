@@ -9,12 +9,20 @@
         <div>
           <BaseTitle>Book a Ride</BaseTitle>
           <BaseDropDown
+            @closeDropdown="
+              () => {
+                setFieldTouched('rideType', true);
+                validateField('rideType');
+              }
+            "
+            :invalid="errors.rideType ? true : false"
             :options="rideTypes"
             label="Ride type"
             placeholder="Select type of ride"
-            v-model="selectedRideType"
+            v-model="rideType"
           />
-          <div :class="{ hidden: !selectedRideType }" class="mt-3">
+          <span v-if="errors.rideType" class="text-xs text-red-500">{{ errors.rideType }}</span>
+          <div :class="{ hidden: !values.rideType }" class="mt-3">
             <div class="flex items-center gap-3 mb-5">
               <BaseCheckbox
                 :isBinary="true"
@@ -28,10 +36,20 @@
               label="From"
               placeholder="Select airport"
               v-model="selectedAirport"
+              :invalid="errors.airport ? true : false"
+              @closeDropdown="
+                () => {
+                  setFieldTouched('airport', true);
+                  validateField('airport');
+                }
+              "
             />
+            <span v-if="errors.airport" class="text-xs text-red-500">{{ errors.airport }}</span>
+
             <div class="mt-3">
               <BaseInputText
                 v-model="location"
+                v-bind="locationAttrs"
                 placeholder="Select destiny"
                 id="location"
                 :readonly="true"
@@ -42,42 +60,69 @@
             </div>
             <div
               class="mt-3 flex bg-[#f6f6f6] rounded-main py-1 has-[:focus-visible]:border-main has-[:focus-visible]:border-2"
+              :class="errors.date || errors.time ? 'border-red-500 border-2' : ''"
             >
-              <DatePicker v-model="date" class="w-1/2">
-                <template #default="{ togglePopover }">
-                  <BaseInputText
-                    label="Trip Date"
-                    placeholder="Pickup Date"
-                    class="border-r-2 h-[38px] peer-focus-visible:border-main"
-                    readonly
-                    sm
-                    v-model="formattedDate"
-                    @click="togglePopover"
-                  />
-                </template>
-              </DatePicker>
-              <div class="relative">
-                <VueTimepicker
-                  id="timepicker"
-                  hide-clear-button
-                  placeholder="Pickup Time"
-                  input-width="100%"
-                  class="!h-[38px]"
-                  format="hh:mm A"
-                  v-model="time"
-                />
-                <label for="timepicker" class="absolute left-4 top-0 text-xs">Trip Time</label>
-              </div>
+              <BaseDatePicker
+              :icon="calendar"
+                class="w-1/2"
+                v-model="date"
+                @popover-did-hide="
+                  () => {
+                    setFieldTouched('date', true);
+                    validateField('date');
+                  }
+                "
+              />
+              <BaseTimePicker
+                :icon="clock"
+                @close="
+                  () => {
+                    setFieldTouched('time', true);
+                    validateField('time');
+                  }
+                "
+                close-on-complete
+                hide-clear-button
+                input-width="100%"
+                class="!h-[38px]"
+                format="hh:mm A"
+                label="Trip Time"
+                id="timepicker"
+                placeholder="Pickup Time"
+                v-model="time"
+              />
             </div>
+            <span v-if="errors.date" class="text-xs text-red-500 block">{{ errors.date }}</span>
+            <span v-if="errors.time" class="text-xs text-red-500 block">{{ errors.time }}</span>
             <div class="mt-3">
               <BaseInputText
                 label="Flight number"
                 placeholder="Enter flight number"
                 v-model="flightNumber"
+                v-bind="flightNumberAttrs"
+                :invalid="errors.flightNumber ? true : false"
               />
+              <span v-if="errors.flightNumber" class="text-xs text-red-500">{{
+                errors.flightNumber
+              }}</span>
             </div>
-            <CarsSelect />
-            <AdditionalFeatures v-model="fees" />
+            <CarsSelect
+              v-model="selectedCar"
+              :selectedCar="selectedCar"
+              :onSelectCar="onSelectCar"
+              :invalid="errors.selectedCar ? true : false"
+            />
+            <span v-if="errors.selectedCar" class="text-xs text-red-500">{{
+              errors.selectedCar
+            }}</span>
+
+            <AdditionalFeatures
+              :invalid="errors.fees ? true : false"
+              v-model="fees"
+              v-bind="feesAttrs"
+            />
+            <span v-if="errors.fees" class="text-xs text-red-500">{{ errors.fees }}</span>
+
             <div class="my-5">
               <BaseTextArea
                 v-model="comment"
@@ -92,12 +137,15 @@
               <TheSummery class="mt-4" />
             </div>
           </div>
-          <PaymentAction @openPaymentDialog="openPaymentDialog" />
+          <PaymentAction
+            :disabled="Object.values(values).length < 8"
+            :handleSubmit="onSubmit"
+            @openPaymentDialog="openPaymentDialog"
+          />
         </div>
       </BaseCard>
     </div>
   </div>
-
   <BaseDialog
     headerTitle="Payment Method"
     headerSubtitle="Please select payment method for your next request"
@@ -106,18 +154,17 @@
     <PaymentContent />
   </BaseDialog>
   <BaseDialog width="auto" headerTitle="Select Pickup location" v-model="locationVisible">
-    <LocationContent/>
+    <LocationContent />
   </BaseDialog>
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import BaseDatePicker from '@/components/common/BaseDatePicker.vue';
+import BaseTimePicker from '@/components/common/BaseTimePicker.vue';
 import BaseDialog from '@/components/common/BaseDialog.vue';
 import PaymentContent from '@/components/bookRide/payment/PaymentContent.vue';
-
-import { ref, computed } from 'vue';
-import VueTimepicker from 'vue3-timepicker';
 import CarsSelect from '@/components/bookRide/carSelection/CarsSelect.vue';
-import map from '@/assets/img/map.png';
 import BaseCard from '@/components/common/BaseCard.vue';
 import BaseTitle from '@/components/common/BaseTitle.vue';
 import BaseDropDown from '@/components/common/BaseDropDown.vue';
@@ -128,47 +175,55 @@ import BaseTextArea from '@/components/common/BaseTextArea.vue';
 import TheSummery from '@/components/bookRide/summery/TheSummery.vue';
 import PaymentAction from '@/components/bookRide/PaymentAction.vue';
 import LocationContent from '@/components/bookRide/LocationContent.vue';
+import map from '@/assets/img/map.png';
+import bookRideSchema from '@/lib/yup/bookingRideSchema';
+import { useForm } from 'vee-validate';
+import calendar from '@/assets/icons/calendar.svg';
+import clock from '@/assets/icons/clock.svg';
 
-import { DatePicker } from 'v-calendar';
-
-const fees = ref();
-const comment = ref(null);
+const { errors, handleSubmit, defineField, values, setFieldTouched, validateField } = useForm({
+  validationSchema: bookRideSchema,
+  validateOnMount: false,
+  initialTouched: false,
+  initialValues: {
+    location: 'Al Thoumamah Rd, An Narjis, Uthman ..'
+  }
+});
 
 const paymentVisible = ref(false);
 const locationVisible = ref(false);
-const openPaymentDialog = () => (paymentVisible.value = true);
-const openLocationDialog = () => (locationVisible.value = true);
+const selected = ref(false);
 
-const date = ref(null);
-const time = ref(null);
-const flightNumber = ref(null);
-const formattedDate = computed(() => {
-  if (!date.value) return '';
-  return new Intl.DateTimeFormat('en-UK', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  }).format(date.value);
-});
-
+const comment = ref(null);
 const rideTypes = ref([
   { name: 'Airport Pickup', id: 1 },
   { name: 'Airport Drop-off', id: 2 },
   { name: 'For a Day', id: 3 },
   { name: 'By Hours', id: 4 }
 ]);
-const selectedRideType = ref(null);
 const airports = ref([
   { name: 'Riyadh (RUH)', subtitle: 'King Fahd International Airport', id: 1 },
   { name: 'Jeddah (JED) ', subtitle: 'King Abdulaziz International Airport', id: 2 },
   { name: 'Dammam (DMM)', subtitle: 'King Fahd International Airport Dammam', id: 3 }
 ]);
-const selectedAirport = ref(null);
 
-const selected = ref(false);
+const [rideType] = defineField('rideType');
+const [location, locationAttrs] = defineField('location');
+const [date] = defineField('date');
+const [time] = defineField('time');
+const [flightNumber, flightNumberAttrs] = defineField('flightNumber');
+const [fees, feesAttrs] = defineField('fees');
+const [selectedAirport] = defineField('airport');
+const [selectedCar] = defineField('selectedCar');
 
-const location = ref('Al Thoumamah Rd, An Narjis, Uthman ..');
+const openPaymentDialog = () => (paymentVisible.value = true);
+const openLocationDialog = () => (locationVisible.value = true);
 
+const onSubmit = handleSubmit((values) => {
+  console.log('submitted');
+  console.log(JSON.stringify(values, null, 2));
+});
+const onSelectCar = (id) => {
+  selectedCar.value = id;
+};
 </script>
-
-<style scoped></style>

@@ -9,11 +9,23 @@
         </span>
       </div>
     </div>
-    <BaseButton label="Submit" class="font-bold" @click="$emit('openDialog')" />
+    <BaseButton
+      :disabled="disabled"
+      :btnType="btnType"
+      label="Submit"
+      class="font-bold"
+      @click="
+        () => {
+          $emit('openPaymentDialog');
+          $props.handleSubmit();
+        }
+      "
+    />
   </div>
 </template>
 
 <script setup>
 import BaseButton from '@/components/common/BaseButton.vue';
 import arrowRight from '@/assets/icons/arrowRight.svg';
+defineProps(['btnType', 'handleSubmit', 'disabled']);
 </script>

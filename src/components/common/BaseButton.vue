@@ -1,5 +1,7 @@
 <template>
   <Button
+  :disabled=disabled
+    :type="btnType ? btnType : 'button'"
     class="w-full disabled:cursor-not-allowed disabled:bg-main/5 disabled:text-main/20"
     :pt="pt"
     :="$attrs"
@@ -14,9 +16,7 @@ defineOptions({
   inheritAttrs: false
 });
 
-const props = defineProps({
-  outline: Boolean
-});
+const props = defineProps(['outline', 'btnType','disabled']);
 const { outline } = toRefs(props);
 
 const pt = {
