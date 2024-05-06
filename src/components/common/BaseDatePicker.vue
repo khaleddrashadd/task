@@ -9,7 +9,7 @@
           readonly
           sm
           :modelValue="formattedDate"
-          @click="togglePopover"
+          @click.stop="togglePopover"
         />
         <div
           v-if="icon"
