@@ -114,7 +114,7 @@
 import BaseDialog from '@/components/common/BaseDialog.vue';
 import PaymentContent from '@/components/bookRide/payment/PaymentContent.vue';
 
-import { ref, watchEffect, computed } from 'vue';
+import { ref, computed } from 'vue';
 import VueTimepicker from 'vue3-timepicker';
 import CarsSelect from '@/components/bookRide/carSelection/CarsSelect.vue';
 import map from '@/assets/img/map.png';
@@ -169,9 +169,6 @@ const selected = ref(false);
 
 const location = ref('Al Thoumamah Rd, An Narjis, Uthman ..');
 
-watchEffect(() => {
-  console.log(comment.value);
-});
 </script>
 
 <style scoped></style>
