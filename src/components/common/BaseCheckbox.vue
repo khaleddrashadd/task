@@ -9,14 +9,14 @@
         },
         input: {
           class:
-            'rounded-main p-2 w-[22px] h-[22px] outline-0 border-0 accent-main appearance-none checked:appearance-auto bg-[#F1F1F1]'
+            'rounded-main p-2 cursor-pointer w-[22px] h-[22px] outline-0 border-0 accent-main appearance-none checked:appearance-auto bg-[#F1F1F1]'
         },
         box: { class: 'hidden' }
       }"
       v-model="isSelected"
       :inputId="id"
     />
-    <label :for="id" class="mx-2 text-sm">{{ label }}</label>
+    <label :for="id" class="mx-2 text-sm cursor-pointer">{{ label }}</label>
   </div>
 </template>
 

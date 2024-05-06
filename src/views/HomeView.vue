@@ -34,9 +34,10 @@
                 v-model="location"
                 placeholder="Select destiny"
                 id="location"
-                readonly
+                :readonly="true"
                 label="To"
                 class="cursor-pointer"
+                @click="openLocationDialog"
               />
             </div>
             <div
@@ -91,7 +92,7 @@
               <TheSummery class="mt-4" />
             </div>
           </div>
-          <PaymentAction @openDialog="openDialog" />
+          <PaymentAction @openPaymentDialog="openPaymentDialog" />
         </div>
       </BaseCard>
     </div>
@@ -100,9 +101,12 @@
   <BaseDialog
     headerTitle="Payment Method"
     headerSubtitle="Please select payment method for your next request"
-    v-model="visible"
+    v-model="paymentVisible"
   >
     <PaymentContent />
+  </BaseDialog>
+  <BaseDialog width="auto" headerTitle="Select Pickup location" v-model="locationVisible">
+    <LocationContent/>
   </BaseDialog>
 </template>
 
@@ -123,14 +127,17 @@ import AdditionalFeatures from '@/components/bookRide/fees/AditionalFeatures.vue
 import BaseTextArea from '@/components/common/BaseTextArea.vue';
 import TheSummery from '@/components/bookRide/summery/TheSummery.vue';
 import PaymentAction from '@/components/bookRide/PaymentAction.vue';
+import LocationContent from '@/components/bookRide/LocationContent.vue';
 
 import { DatePicker } from 'v-calendar';
 
 const fees = ref();
 const comment = ref(null);
 
-const visible = ref(false);
-const openDialog = () => (visible.value = true);
+const paymentVisible = ref(false);
+const locationVisible = ref(false);
+const openPaymentDialog = () => (paymentVisible.value = true);
+const openLocationDialog = () => (locationVisible.value = true);
 
 const date = ref(null);
 const time = ref(null);

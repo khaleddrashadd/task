@@ -2,7 +2,7 @@
   <Dialog
     :pt="{
       root: {
-        class: 'bg-sec p-5 rounded-main drop-shadow-main'
+        class: `bg-sec p-5 rounded-main drop-shadow-main ${width==='auto'?'!w-auto':''}`
       },
       header: {
         class: 'flex flex-col-reverse pt-1 gap-3'
@@ -30,6 +30,6 @@
 import Dialog from 'primevue/dialog';
 import BaseDialogHeader from '@/components/common/BaseDialogHeader.vue';
 
-defineProps(['headerTitle', 'headerSubtitle']);
+defineProps(['headerTitle', 'headerSubtitle','width']);
 const visible = defineModel();
 </script>
