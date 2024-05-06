@@ -91,14 +91,25 @@
               <TheSummery class="mt-4" />
             </div>
           </div>
-          <PaymentAction />
+          <PaymentAction @openDialog="openDialog" />
         </div>
       </BaseCard>
     </div>
   </div>
+
+  <BaseDialog
+    headerTitle="Payment Method"
+    headerSubtitle="Please select payment method for your next request"
+    v-model="visible"
+  >
+    <PaymentContent />
+  </BaseDialog>
 </template>
 
 <script setup>
+import BaseDialog from '@/components/common/BaseDialog.vue';
+import PaymentContent from '@/components/bookRide/payment/PaymentContent.vue';
+
 import { ref, watchEffect, computed } from 'vue';
 import VueTimepicker from 'vue3-timepicker';
 import CarsSelect from '@/components/bookRide/carSelection/CarsSelect.vue';
@@ -117,6 +128,9 @@ import { DatePicker } from 'v-calendar';
 
 const fees = ref();
 const comment = ref(null);
+
+const visible = ref(false);
+const openDialog = () => (visible.value = true);
 
 const date = ref(null);
 const time = ref(null);

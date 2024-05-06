@@ -1,13 +1,7 @@
 <template>
-  <div>
-    This is the rides view
+  <div class="mt-28">
+    <h2>My Rides</h2>
   </div>
 </template>
-
 <script setup>
-
 </script>
-
-<style lang="scss" scoped>
-
-</style>
